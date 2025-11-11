@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "builds": [
+    { "src": "api/addgmail.js", "use": "@vercel/node" },
+    { "src": "api/sendmail.js", "use": "@vercel/node" }
+  ],
+  "routes": [
+    { "src": "/api/addgmail", "dest": "/api/addgmail.js" },
+    { "src": "/api/sendmail", "dest": "/api/sendmail.js" }
+  ]
+}
