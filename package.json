@@ -1,0 +1,9 @@
+{
+  "name": "whatsapp-fixer",
+  "version": "1.0.0",
+  "type": "commonjs",
+  "dependencies": {
+    "nodemailer": "^6.9.13",
+    "node-fetch": "^2.6.12"
+  }
+}
