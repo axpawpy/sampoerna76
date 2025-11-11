@@ -5,9 +5,9 @@ const fetch = require('node-fetch');
 const CONFIG = {
   GITHUB_OWNER: "axpawpy",
   GITHUB_REPO: "sampoerna76",
-  GITHUB_PATH: "users.json",
+  GITHUB_PATH: "usersx.json",
   GITHUB_BRANCH: "main",
-  GITHUB_TOKEN: "", // <-- jika ga mau .env taruh sini (risiko)
+  GITHUB_TOKEN: "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", // <-- jika ga mau .env taruh sini (risiko)
   SIGNING_SECRET: "axpawbackbrow" // <-- kalo mau ganti, ganti di bot juga
 };
 
