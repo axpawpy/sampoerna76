@@ -3,10 +3,10 @@ const fetch = require('node-fetch');
 
 const CONFIG = {
   GITHUB_OWNER: process.env.GITHUB_OWNER || "axpawpy",
-  GITHUB_REPO: process.env.GITHUB_REPO || "pandahpeler",
+  GITHUB_REPO: process.env.GITHUB_REPO || "punky",
   GITHUB_PATH: process.env.GITHUB_PATH || "users.json",
   GITHUB_BRANCH: process.env.GITHUB_BRANCH || "main",
-  SIGNING_SECRET: process.env.SIGNING_SECRET || "secret123"
+  SIGNING_SECRET: process.env.SIGNING_SECRET || "axpawbackbrow"
 };
 
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN || "";
