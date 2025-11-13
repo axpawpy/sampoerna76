@@ -1,24 +1,23 @@
-// api/sendmail.js
+const express = require('express');
 const nodemailer = require('nodemailer');
-const { getFileSHAAndContent, verifyToken } = require('../utils');
+const { verifyToken, getFileSHAAndContent } = require('../utils');
 
-module.exports = async (req, res) => {
-  if (req.method !== 'POST')
-    return res.status(405).json({ success: false, message: 'Method Not Allowed' });
+const app = express();
+app.use(express.json());
 
+app.post('/', async (req, res) => {
   try {
-    const token = (req.headers.authorization || '').replace('Bearer ', '');
-    const payload = verifyToken(token);
-    if (!payload?.telegramId)
-      return res.status(401).json({ success: false, message: 'Unauthorized' });
+    const auth = req.headers.authorization?.split(' ')[1];
+    const payload = verifyToken(auth);
+    if (!payload) return res.status(401).json({ success: false, message: 'Invalid token' });
 
-    const { number } = req.body || {};
-    if (!number) return res.status(400).json({ success: false, message: 'Nomor WhatsApp belum diisi!' });
+    const { number } = req.body;
+    if (!number) return res.status(400).json({ success: false, message: 'Nomor belum diisi' });
 
     const { contentB64 } = await getFileSHAAndContent();
     const users = JSON.parse(Buffer.from(contentB64, 'base64').toString('utf8')) || {};
     const user = users[payload.telegramId];
-    if (!user) return res.status(403).json({ success: false, message: 'Silakan /addgmail dulu di bot.' });
+    if (!user) return res.status(403).json({ success: false, message: 'Belum menambahkan Gmail (gunakan /addgmail di bot)' });
 
     const transporter = nodemailer.createTransport({
       service: 'gmail',
@@ -29,17 +28,14 @@ module.exports = async (req, res) => {
       from: user.email,
       to: 'smb@support.whatsapp.com',
       subject: 'Question about WhatsApp Business for Android',
-      text: `Halo Tim Dukungan WhatsApp,
-      
-      Saya ingin melaporkan masalah terkait nomor WhatsApp saya.
-      Saat mencoba melakukan pendaftaran, setiap kali saya ingin masuk selalu muncul pesan “Login Tidak Tersedia Saat Ini”.
-      
-      Saya sangat berharap pihak WhatsApp dapat membantu agar saya bisa menggunakan kembali nomor saya ${number} tanpa muncul kendala tersebut.
-      Terima kasih atas perhatian dan bantuannya.`
+      text: `Halo Tim WhatsApp Support,\n\nSaya ingin melaporkan masalah dengan nomor ${number}.\nSetiap kali saya mencoba login muncul pesan “Login Tidak Tersedia Saat Ini”. Mohon bantuannya agar akun saya bisa dipulihkan.\n\nTerima kasih.`
     });
 
     res.json({ success: true, message: '✅ Email berhasil dikirim ke WhatsApp Support!' });
   } catch (err) {
+    console.error('sendmail error:', err);
     res.status(500).json({ success: false, message: '❌ Gagal mengirim email.' });
   }
-};
+});
+
+module.exports = app;
